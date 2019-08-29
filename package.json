@@ -72,10 +72,12 @@
   },
   "license": "MIT",
   "dependencies": {
+    "braces": "^3.0.2",
     "clear": "^0.1.0",
     "commander": "^2.19.0",
     "fp-panel": "0.0.5",
     "keypress": "^0.2.1",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "mem": "^5.1.1"
   }
 }
