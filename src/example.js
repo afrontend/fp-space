@@ -5,11 +5,23 @@ const keypress = require("keypress");
 const program = require("commander");
 const game = require("../lib/index.js");
 const pkg = require("../package.json");
+const chalk = require('chalk');
 
 program
   .version(pkg.version)
   .option("-f, --full", "terminal full size")
   .parse(process.argv);
+
+function getColorItem(item) {
+  if (chalk[item.color]) {
+    return chalk[item.color]("■");
+  }
+  return chalk.blue("■");
+}
+
+const getMark = item => {
+  return game.isBlankItem(item) ? " " : getColorItem(item);
+};
 
 const dump = state => {
   console.log(JSON.stringify(state));
@@ -61,7 +73,7 @@ const startGame = (rows = 15, columns = 15) => {
 
   const format = ary =>
     ary
-      .map(r => r.map(item => (game.isBlankItem(item) ? " " : "■")).join(" "))
+      .map(r => r.map(item => (getMark(item))).join(" "))
       .join("\r\n");
 
   global.timer = setInterval(() => {
