@@ -5,22 +5,22 @@ const keypress = require("keypress");
 const program = require("commander");
 const game = require("../lib/index.js");
 const pkg = require("../package.json");
-const chalk = require('chalk');
+const chalk = require("chalk");
 
 program
   .version(pkg.version)
   .option("-f, --full", "terminal full size")
   .parse(process.argv);
 
-function getColorItem(item) {
+function getColorItem(item, char) {
   if (chalk[item.color]) {
-    return chalk[item.color]("■");
+    return chalk[item.color](char);
   }
-  return chalk.blue("■");
+  return chalk.blue(char);
 }
 
 const getMark = item => {
-  return game.isBlankItem(item) ? " " : getColorItem(item);
+  return game.isBlankItem(item) ? " " : getColorItem(item, "■");
 };
 
 const dump = state => {
@@ -72,9 +72,7 @@ const startGame = (rows = 15, columns = 15) => {
   process.stdin.resume();
 
   const format = ary =>
-    ary
-      .map(r => r.map(item => (getMark(item))).join(" "))
-      .join("\r\n");
+    ary.map(r => r.map(item => getMark(item)).join(" ")).join("\r\n");
 
   global.timer = setInterval(() => {
     global.state = game.tick(global.state);
