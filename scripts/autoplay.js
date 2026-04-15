@@ -10,6 +10,15 @@ const COLS = 15;
 const TICK_INTERVAL_MS = 200;
 const MAX_TICKS = 250;
 
+// Ticks before the patrol target advances to the next position
+const PATROL_STEPS = 10;
+
+// Fire a missile every N ticks (avoids continuous laser look)
+const SHOOT_EVERY = 4;
+
+// Shuttle sweeps left → center → right → center → left
+const PATROL_TARGETS = [2, 5, 9, 12, 9, 5, 2];
+
 function getColorItem(item, char) {
   if (chalk[item.color]) {
     return chalk[item.color](char);
@@ -26,33 +35,26 @@ const render = state =>
     .map(row => row.map(getMark).join(""))
     .join("\n");
 
-function getShuttleCol(panel) {
-  // Find leftmost non-blank column in bottom two rows
-  for (let r = ROWS - 1; r >= ROWS - 2; r--) {
-    for (let c = 0; c < COLS; c++) {
-      if (!game.isBlankItem(panel[r][c])) return c + 1; // center offset
-    }
-  }
-  return Math.floor(COLS / 2);
+/** Returns the center column of the shuttle by averaging all non-blank columns. */
+function getShuttleCenter(panel) {
+  const cols = [];
+  panel.forEach(row => {
+    row.forEach((item, c) => {
+      if (!game.isBlankItem(item)) cols.push(c);
+    });
+  });
+  if (cols.length === 0) return Math.floor(COLS / 2);
+  return Math.round(cols.reduce((a, b) => a + b, 0) / cols.length);
 }
-
-// Patrol: shuttle sweeps left → right → left across the board
-// Target columns cycle: 2, 5, 8, 11, 12, 9, 6, 3, 2, ...
-const PATROL_TARGETS = [2, 5, 9, 12, 9, 5, 2];
-let patrolIdx = 0;
-let patrolStepCount = 0;
-const PATROL_STEPS = 10; // ticks before moving to next patrol target
-
-// Shoot every SHOOT_EVERY ticks (not every tick → avoids laser look)
-const SHOOT_EVERY = 4;
 
 let state = game.init(ROWS, COLS);
 let ticks = 0;
+let patrolIdx = 0;
+let patrolStepCount = 0;
 
 const timer = setInterval(() => {
-  const shuttleCol = getShuttleCol(state.shuttlePanel);
+  const shuttleCenter = getShuttleCenter(state.shuttlePanel);
 
-  // Update patrol target every PATROL_STEPS ticks
   patrolStepCount++;
   if (patrolStepCount >= PATROL_STEPS) {
     patrolStepCount = 0;
@@ -60,18 +62,17 @@ const timer = setInterval(() => {
   }
 
   const targetCol = PATROL_TARGETS[patrolIdx];
-  const diff = targetCol - shuttleCol;
+  const diff = targetCol - shuttleCenter;
 
   let keyName;
   if (ticks % SHOOT_EVERY === 0) {
-    // Shoot periodically
     keyName = "up";
   } else if (diff > 0) {
     keyName = "right";
   } else if (diff < 0) {
     keyName = "left";
   } else {
-    keyName = "up"; // at target, shoot
+    keyName = "up"; // already at target — shoot
   }
 
   state = game.key(keyName, state);

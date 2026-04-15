@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-const _ = require("lodash");
 const clear = require("clear");
 const keypress = require("keypress");
 const program = require("commander");
@@ -19,26 +18,24 @@ function getColorItem(item, char) {
   return chalk.blue(char);
 }
 
-const getMark = item => {
-  return game.isBlankItem(item) ? " " : getColorItem(item, "■");
-};
+const getMark = item =>
+  game.isBlankItem(item) ? " " : getColorItem(item, "■");
 
-const dump = state => {
-  console.log(JSON.stringify(state));
-};
-
-const save = global => {
-  global.savedState = _.cloneDeep(global.state);
-};
-
-const load = global => {
-  global.state = global.savedState;
-};
+const format = ary =>
+  ary.map(r => r.map(item => getMark(item)).join(" ")).join("\r\n");
 
 const startGame = (rows = 15, columns = 15) => {
-  const global = {
+  const gameCtx = {
     state: game.init(rows, columns)
   };
+
+  // Choose render strategy once based on --full flag
+  const render = program.full
+    ? () => console.log(format(game.join(gameCtx.state)))
+    : () => {
+        clear();
+        console.log(format(game.join(gameCtx.state)));
+      };
 
   keypress(process.stdin);
 
@@ -49,37 +46,18 @@ const startGame = (rows = 15, columns = 15) => {
     if (key && key.name === "q") {
       process.exit();
     }
-    if (key && key.name === "s") {
-      save(global);
-    }
-    if (key && key.name === "l") {
-      load(global);
-    }
-    if (key && key.ctrl && key.name === "d") {
-      dump(global.state);
-      process.exit();
-    }
     if (key) {
-      global.state = game.key(key.name, global.state);
-      if (!program.full) {
-        clear();
-      }
-      console.log(format(game.join(global.state)));
+      gameCtx.state = game.key(key.name, gameCtx.state);
+      render();
     }
   });
 
   process.stdin.setRawMode(true);
   process.stdin.resume();
 
-  const format = ary =>
-    ary.map(r => r.map(item => getMark(item)).join(" ")).join("\r\n");
-
-  global.timer = setInterval(() => {
-    global.state = game.tick(global.state);
-    if (!program.full) {
-      clear();
-    }
-    console.log(format(game.join(global.state)));
+  gameCtx.timer = setInterval(() => {
+    gameCtx.state = game.tick(gameCtx.state);
+    render();
   }, 200);
 };
 

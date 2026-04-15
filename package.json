@@ -14,7 +14,7 @@
   ],
   "main": "lib/index.js",
   "bin": {
-    "fp-block": "./src/example.js"
+    "fp-block": "src/example.js"
   },
   "keywords": [
     "javascript",
@@ -51,7 +51,10 @@
     "start": "node ./src/example.js",
     "release": "bash scripts/make-demo.sh"
   },
-  "repository": "https://github.com/afrontend/fp-space.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/afrontend/fp-space.git"
+  },
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.4.2",
