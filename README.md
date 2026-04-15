@@ -1,5 +1,7 @@
 # fp-space [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
-> library for fp-space-game
+> A functional space shooter game library
+
+![Demo](https://github.com/afrontend/fp-space/releases/download/demo-assets/demo.gif)
 
 ## Installation
 
@@ -10,10 +12,62 @@ $ npm install --save fp-space
 ## Usage
 
 ```js
-const fpSpace = require('fp-space');
+const game = require('fp-space');
 
-fpSpace('Rainbow');
+// Initialize game state (default: 15x15 grid)
+let state = game.init(15, 15);
+
+// Handle key input: 'left', 'right', 'up' (fire), 'space' (pause)
+state = game.key('left', state);
+
+// Advance one tick (moves missiles up, meteorite down every 3rd tick)
+state = game.tick(state);
+
+// Merge all panels into a 2D array for rendering
+const grid = game.join(state);
+grid.forEach(row => {
+  console.log(row.map(item => game.isBlankItem(item) ? '  ' : '■ ').join(''));
+});
 ```
+
+## API
+
+### `init(rows?, columns?)`
+
+Creates the initial game state. Defaults to a 15×15 grid.
+
+Returns an object with three panels:
+- `shuttlePanel` — the player's ship (magenta, T-shape, centered at the bottom)
+- `meteoritePanel` — a row of meteorites (blue) falling from the top
+- `missilePanel` — missiles (yellow) fired by the player
+
+### `tick(state)`
+
+Advances the game by one frame:
+- Moves all missiles one step up
+- Moves the meteorite one step down every 3rd tick
+- Detects collisions (overlapping missiles and meteorites cancel each other)
+- Spawns a new meteorite row when all meteorites are destroyed
+
+### `key(keyName, state)`
+
+Applies a key input to the game state. Valid keys:
+
+| Key | Action |
+|---|---|
+| `left` | Move shuttle left (blocked by edge or meteorite) |
+| `right` | Move shuttle right (blocked by edge or meteorite) |
+| `up` | Fire a missile from the shuttle |
+| `space` | Toggle pause |
+
+### `join(state)`
+
+Merges `missilePanel`, `shuttlePanel`, and `meteoritePanel` into a single 2D array for rendering.
+
+### `isBlankItem(item)`
+
+Returns `true` if the cell is empty.
+
 ## Demo GIF 업데이트
 
 터미널 동작 미리보기를 자동으로 재생성합니다.
