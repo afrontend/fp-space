@@ -48,7 +48,8 @@
     "pretest": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "start": "node ./src/example.js"
+    "start": "node ./src/example.js",
+    "release": "bash scripts/make-demo.sh"
   },
   "repository": "https://github.com/afrontend/fp-space.git",
   "license": "MIT",
