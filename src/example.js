@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const clear = require("clear");
 const keypress = require("keypress");
-const program = require("commander");
+const { program } = require("commander");
 const game = require("../lib/index.js");
 const pkg = require("../package.json");
 const chalk = require("chalk");
@@ -29,7 +29,7 @@ const startGame = (rows = 15, columns = 15) => {
   };
 
   // Choose render strategy once based on --full flag
-  const render = program.full
+  const render = program.opts().full
     ? () => console.log(format(game.join(gameCtx.state)))
     : () => {
         clear();
@@ -60,12 +60,12 @@ const startGame = (rows = 15, columns = 15) => {
   }, 200);
 };
 
-const activate = program => {
-  if (program.full) {
+const activate = () => {
+  if (program.opts().full) {
     startGame(process.stdout.rows - 1, process.stdout.columns / 2 - 1);
   } else {
     startGame();
   }
 };
 
-activate(program);
+activate();
