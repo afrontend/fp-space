@@ -1,72 +1,113 @@
-# fp-space [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
+# fp-space [![NPM version][npm-image]][npm-url] [![Build Status][actions-image]][actions-url]
+
 > A functional space shooter game library
 
 ![Demo](https://github.com/afrontend/fp-space/releases/download/demo-assets/demo.gif)
 
-## Installation
+## Just run
 
 ```sh
-$ npm install --save fp-space
+npx fp-space
 ```
 
-## Usage
+Use `--full` to fill the entire terminal window:
+
+```sh
+npx fp-space --full
+```
+
+## Run with source
+
+```sh
+git clone https://github.com/afrontend/fp-space.git
+cd fp-space
+npm install
+npm start
+```
+
+### CLI options
+
+| Option | Description |
+|--------|-------------|
+| `-f, --full` | Use full terminal size for the board |
+
+## Controls
+
+| Key | Action |
+|-----|--------|
+| `←` `→` | Move shuttle left / right |
+| `↑` | Fire missile |
+| `Space` | Pause / resume |
+| `q` / `Ctrl+C` | Quit |
+
+## Library API
+
+Install as a dependency:
+
+```sh
+npm install fp-space
+```
+
+```js
+const game = require('fp-space');
+```
+
+### `game.init(rows?, columns?)`
+
+Creates the initial game state. Defaults to a 15×15 grid.
+
+```js
+let state = game.init(15, 15);
+```
+
+### `game.tick(state)`
+
+Advances the game by one frame. Moves missiles up every tick; moves the meteorite down every 3rd tick. Detects collisions. Returns updated state.
+
+```js
+state = game.tick(state);
+```
+
+### `game.key(keyName, state)`
+
+Applies a key input. Valid key names: `'left'`, `'right'`, `'up'`, `'space'`.
+Returns updated state.
+
+```js
+state = game.key('left', state);
+```
+
+### `game.join(state)`
+
+Merges all panels into a single 2D array for rendering.
+
+```js
+const grid = game.join(state);
+grid.forEach(row => {
+  console.log(row.map(item => game.isBlank(item) ? '.' : '■').join(' '));
+});
+```
+
+### `game.isBlank(item)`
+
+Returns `true` if a cell is empty.
+
+### Minimal example
 
 ```js
 const game = require('fp-space');
 
-// Initialize game state (default: 15x15 grid)
 let state = game.init(15, 15);
 
-// Handle key input: 'left', 'right', 'up' (fire), 'space' (pause)
-state = game.key('left', state);
-
-// Advance one tick (moves missiles up, meteorite down every 3rd tick)
-state = game.tick(state);
-
-// Merge all panels into a 2D array for rendering
-const grid = game.join(state);
-grid.forEach(row => {
-  console.log(row.map(item => game.isBlankItem(item) ? '  ' : '■ ').join(''));
-});
+setInterval(() => {
+  state = game.tick(state);
+  const grid = game.join(state);
+  console.clear();
+  console.log(grid.map(row =>
+    row.map(item => game.isBlank(item) ? '.' : '■').join(' ')
+  ).join('\n'));
+}, 200);
 ```
-
-## API
-
-### `init(rows?, columns?)`
-
-Creates the initial game state. Defaults to a 15×15 grid.
-
-Returns an object with three panels:
-- `shuttlePanel` — the player's ship (magenta, T-shape, centered at the bottom)
-- `meteoritePanel` — a row of meteorites (blue) falling from the top
-- `missilePanel` — missiles (yellow) fired by the player
-
-### `tick(state)`
-
-Advances the game by one frame:
-- Moves all missiles one step up
-- Moves the meteorite one step down every 3rd tick
-- Detects collisions (overlapping missiles and meteorites cancel each other)
-- Spawns a new meteorite row when all meteorites are destroyed
-
-### `key(keyName, state)`
-
-Applies a key input to the game state. Valid keys:
-
-| Key | Action |
-|---|---|
-| `left` | Move shuttle left (blocked by edge or meteorite) |
-| `right` | Move shuttle right (blocked by edge or meteorite) |
-| `up` | Fire a missile from the shuttle |
-| `space` | Toggle pause |
-
-### `join(state)`
-
-Merges `missilePanel`, `shuttlePanel`, and `meteoritePanel` into a single 2D array for rendering.
-
-### `isBlankItem(item)`
-
-Returns `true` if the cell is empty.
 
 ## Demo GIF 업데이트
 
@@ -99,9 +140,5 @@ MIT © [Bob Hwang](https://afrontend.github.io)
 
 [npm-image]: https://badge.fury.io/js/fp-space.svg
 [npm-url]: https://npmjs.org/package/fp-space
-[travis-image]: https://travis-ci.org/afrontend/fp-space.svg?branch=master
-[travis-url]: https://travis-ci.org/afrontend/fp-space
-[daviddm-image]: https://david-dm.org/afrontend/fp-space.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/afrontend/fp-space
-[coveralls-image]: https://coveralls.io/repos/afrontend/fp-space/badge.svg
-[coveralls-url]: https://coveralls.io/r/afrontend/fp-space
+[actions-image]: https://github.com/afrontend/fp-space/actions/workflows/demo.yml/badge.svg
+[actions-url]: https://github.com/afrontend/fp-space/actions/workflows/demo.yml

@@ -14,7 +14,7 @@
   ],
   "main": "lib/index.js",
   "bin": {
-    "fp-block": "src/example.js"
+    "fp-space": "src/example.js"
   },
   "keywords": [
     "javascript",
