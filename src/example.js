@@ -18,14 +18,14 @@ function getColorItem(item, char) {
   return chalk.blue(char);
 }
 
-const getMark = item => (game.isBlank(item) ? " " : getColorItem(item, "■"));
+const getMark = (item) => (game.isBlank(item) ? " " : getColorItem(item, "■"));
 
-const format = ary =>
-  ary.map(r => r.map(item => getMark(item)).join(" ")).join("\r\n");
+const format = (ary) =>
+  ary.map((r) => r.map((item) => getMark(item)).join(" ")).join("\r\n");
 
 const startGame = (rows = 15, columns = 15) => {
   const gameCtx = {
-    state: game.init(rows, columns)
+    state: game.init(rows, columns),
   };
 
   // Choose render strategy once based on --full flag

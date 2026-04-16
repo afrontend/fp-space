@@ -1,39 +1,39 @@
 const js = require("@eslint/js");
-const prettier = require("eslint-plugin-prettier");
-const configPrettier = require("eslint-config-prettier");
+const prettier = require("eslint-config-prettier");
+const prettierPlugin = require("eslint-plugin-prettier");
 
 module.exports = [
   js.configs.recommended,
+  prettier,
   {
     languageOptions: {
-      ecmaVersion: 2020,
-      sourceType: "module",
+      ecmaVersion: "latest",
+      sourceType: "commonjs",
       globals: {
-        console: "readonly",
         process: "readonly",
         Buffer: "readonly",
         __dirname: "readonly",
         __filename: "readonly",
+        console: "readonly",
         module: "readonly",
         require: "readonly",
         exports: "readonly",
         global: "readonly",
+        setInterval: "readonly",
+        clearInterval: "readonly",
         setTimeout: "readonly",
         clearTimeout: "readonly",
-        setInterval: "readonly",
-        clearInterval: "readonly"
-      }
+      },
     },
     plugins: {
-      prettier
+      prettier: prettierPlugin,
     },
     rules: {
-      ...configPrettier.rules,
-      "prettier/prettier": "error"
-    }
+      "prettier/prettier": "error",
+    },
   },
   {
-    files: ["**/*.test.js", "**/*.spec.js", "__tests__/**/*.js"],
+    files: ["**/*.test.js", "**/*.spec.js", "**/__tests__/**/*.js"],
     languageOptions: {
       globals: {
         describe: "readonly",
@@ -45,11 +45,11 @@ module.exports = [
         beforeAll: "readonly",
         afterAll: "readonly",
         vi: "readonly",
-        vitest: "readonly"
-      }
-    }
+        vitest: "readonly",
+      },
+    },
   },
   {
-    ignores: ["coverage/**/*"]
-  }
+    ignores: ["coverage/**/*"],
+  },
 ];

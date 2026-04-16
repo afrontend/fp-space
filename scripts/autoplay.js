@@ -26,19 +26,19 @@ function getColorItem(item, char) {
   return chalk.blue(char);
 }
 
-const getMark = item =>
+const getMark = (item) =>
   game.isBlankItem(item) ? "  " : getColorItem(item, "■ ");
 
-const render = state =>
+const render = (state) =>
   game
     .join(state)
-    .map(row => row.map(getMark).join(""))
+    .map((row) => row.map(getMark).join(""))
     .join("\n");
 
 /** Returns the center column of the shuttle by averaging all non-blank columns. */
 function getShuttleCenter(panel) {
   const cols = [];
-  panel.forEach(row => {
+  panel.forEach((row) => {
     row.forEach((item, c) => {
       if (!game.isBlankItem(item)) cols.push(c);
     });

@@ -7,7 +7,7 @@ module.exports = defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov", "html"],
-      exclude: ["node_modules/", "coverage/"]
-    }
-  }
+      exclude: ["node_modules/", "coverage/"],
+    },
+  },
 });
