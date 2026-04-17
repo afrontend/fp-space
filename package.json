@@ -48,7 +48,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "start": "node ./src/example.js",
-    "release": "bash scripts/make-demo.sh"
+    "demo-gif": "bash scripts/make-demo.sh"
   },
   "repository": {
     "type": "git",
