@@ -27,7 +27,7 @@ function getColorItem(item, char) {
 }
 
 const getMark = (item) =>
-  game.isBlankItem(item) ? "  " : getColorItem(item, "■ ");
+  game.isBlank(item) ? "  " : getColorItem(item, "■ ");
 
 const render = (state) =>
   game
@@ -40,7 +40,7 @@ function getShuttleCenter(panel) {
   const cols = [];
   panel.forEach((row) => {
     row.forEach((item, c) => {
-      if (!game.isBlankItem(item)) cols.push(c);
+      if (!game.isBlank(item)) cols.push(c);
     });
   });
   if (cols.length === 0) return Math.floor(COLS / 2);
