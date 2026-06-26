@@ -23,12 +23,22 @@ const getMark = (item) => (game.isBlank(item) ? " " : getColorItem(item, "■"))
 const format = (ary) =>
   ary.map((r) => r.map((item) => getMark(item)).join(" ")).join("\r\n");
 
+const save = (gameCtx) => {
+  gameCtx.savedState = structuredClone(gameCtx.state);
+};
+
+const reload = (gameCtx) => {
+  gameCtx.state = gameCtx.savedState;
+};
+
 const HELP_TEXT = [
   "",
   "  Controls:",
   "  ← →      Move left / right",
   "  ↑         Fire missile",
   "  Space     Pause / resume",
+  "  s         Save state",
+  "  l         Load state",
   "  h         Toggle this help",
   "  q / ^C    Quit",
 ].join("\r\n");
@@ -58,6 +68,12 @@ const startGame = (rows = 15, columns = 15) => {
     }
     if (key && key.name === "h") {
       gameCtx.showHelp = !gameCtx.showHelp;
+    }
+    if (key && key.name === "s") {
+      save(gameCtx);
+    }
+    if (key && key.name === "l") {
+      reload(gameCtx);
     }
     if (key) {
       gameCtx.state = game.key(key.name, gameCtx.state);
