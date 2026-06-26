@@ -79,6 +79,7 @@ const startGame = (rows = 15, columns = 15) => {
 const runCountdown = (rows, columns) => {
   const counts = [5, 4, 3, 2, 1];
   let i = 0;
+
   const tick = () => {
     clear();
     console.log("\r\n");
@@ -92,6 +93,7 @@ const runCountdown = (rows, columns) => {
       setTimeout(() => startGame(rows, columns), 1000);
     }
   };
+
   tick();
 };
 
