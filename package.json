@@ -14,7 +14,7 @@
   ],
   "main": "lib/index.js",
   "bin": {
-    "fp-space": "src/example.js"
+    "fp-space": "./src/example.js"
   },
   "keywords": [
     "javascript",
@@ -29,9 +29,6 @@
     "prettier": "^3.0.0",
     "vitest": "^4.1.7"
   },
-  "engines": {
-    "node": ">= 8.0.0"
-  },
   "scripts": {
     "pretest": "eslint .",
     "test": "vitest run",
@@ -39,10 +36,7 @@
     "start": "node ./src/example.js",
     "demo-gif": "bash scripts/make-demo.sh"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/afrontend/fp-space.git"
-  },
+  "repository": "https://github.com/afrontend/fp-space.git",
   "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.2",
