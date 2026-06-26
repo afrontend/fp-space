@@ -1,4 +1,4 @@
-# fp-space [![NPM version][npm-image]][npm-url] [![Build Status][actions-image]][actions-url]
+# fp-space
 
 > A functional space shooter game library
 
@@ -35,10 +35,14 @@ npm start
 
 | Key | Action |
 |-----|--------|
-| `←` `→` | Move shuttle left / right |
+| `←` `→` | Move left / right |
 | `↑` | Fire missile |
 | `Space` | Pause / resume |
+| `h` | Toggle help |
+| `s` | Save state |
+| `l` | Load saved state |
 | `q` / `Ctrl+C` | Quit |
+| `Ctrl+D` | Dump state (JSON) and quit |
 
 ## Library API
 
@@ -137,8 +141,3 @@ master 브랜치에 푸시하면 `.github/workflows/demo.yml`이 위 과정을 �
 
 MIT © [Bob Hwang](https://afrontend.github.io)
 
-
-[npm-image]: https://badge.fury.io/js/fp-space.svg
-[npm-url]: https://npmjs.org/package/fp-space
-[actions-image]: https://github.com/afrontend/fp-space/actions/workflows/demo.yml/badge.svg
-[actions-url]: https://github.com/afrontend/fp-space/actions/workflows/demo.yml
