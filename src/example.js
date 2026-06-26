@@ -23,18 +23,29 @@ const getMark = (item) => (game.isBlank(item) ? " " : getColorItem(item, "■"))
 const format = (ary) =>
   ary.map((r) => r.map((item) => getMark(item)).join(" ")).join("\r\n");
 
+const HELP_TEXT = [
+  "",
+  "  Controls:",
+  "  ← →      Move left / right",
+  "  ↑         Fire missile",
+  "  Space     Pause / resume",
+  "  h         Toggle this help",
+  "  q / ^C    Quit",
+].join("\r\n");
+
 const startGame = (rows = 15, columns = 15) => {
   const gameCtx = {
     state: game.init(rows, columns),
+    showHelp: false,
   };
 
-  // Choose render strategy once based on --full flag
-  const render = program.opts().full
-    ? () => console.log(format(game.join(gameCtx.state)))
-    : () => {
-        clear();
-        console.log(format(game.join(gameCtx.state)));
-      };
+  const render = () => {
+    if (!program.opts().full) clear();
+    console.log(format(game.join(gameCtx.state)));
+    if (gameCtx.showHelp) {
+      console.log(HELP_TEXT);
+    }
+  };
 
   keypress(process.stdin);
 
@@ -44,6 +55,9 @@ const startGame = (rows = 15, columns = 15) => {
     }
     if (key && key.name === "q") {
       process.exit();
+    }
+    if (key && key.name === "h") {
+      gameCtx.showHelp = !gameCtx.showHelp;
     }
     if (key) {
       gameCtx.state = game.key(key.name, gameCtx.state);
@@ -55,16 +69,37 @@ const startGame = (rows = 15, columns = 15) => {
   process.stdin.resume();
 
   gameCtx.timer = setInterval(() => {
-    gameCtx.state = game.tick(gameCtx.state);
+    if (!gameCtx.showHelp) {
+      gameCtx.state = game.tick(gameCtx.state);
+    }
     render();
   }, 200);
 };
 
+const runCountdown = (rows, columns) => {
+  const counts = [5, 4, 3, 2, 1];
+  let i = 0;
+  const tick = () => {
+    clear();
+    console.log("\r\n");
+    console.log(chalk.yellow("  fp-space\r\n"));
+    console.log(chalk.cyan("  Press [ h ] for help\r\n"));
+    console.log(chalk.white("  Starting in... ") + chalk.bold.green(counts[i]));
+    i++;
+    if (i < counts.length) {
+      setTimeout(tick, 1000);
+    } else {
+      setTimeout(() => startGame(rows, columns), 1000);
+    }
+  };
+  tick();
+};
+
 const activate = () => {
   if (program.opts().full) {
-    startGame(process.stdout.rows - 1, process.stdout.columns / 2 - 1);
+    runCountdown(process.stdout.rows - 1, process.stdout.columns / 2 - 1);
   } else {
-    startGame();
+    runCountdown();
   }
 };
 
