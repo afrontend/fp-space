@@ -18,6 +18,10 @@ function getColorItem(item, char) {
   return chalk.blue(char);
 }
 
+const dump = (state) => {
+  console.log(JSON.stringify(state));
+};
+
 const getMark = (item) => (game.isBlank(item) ? " " : getColorItem(item, "■"));
 
 const format = (ary) =>
@@ -70,6 +74,9 @@ const startGame = (rows = 15, columns = 15) => {
       save(gameCtx);
     } else if (key && key.name === "l") {
       reload(gameCtx);
+    } else if (key && key.ctrl && key.name === "d") {
+      dump(gameCtx.state);
+      process.exit();
     } else if (key) {
       gameCtx.state = game.key(key.name, gameCtx.state);
       render();
