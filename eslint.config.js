@@ -3,6 +3,7 @@ const prettier = require("eslint-config-prettier");
 const prettierPlugin = require("eslint-plugin-prettier");
 
 module.exports = [
+  { ignores: ["coverage/**"] },
   js.configs.recommended,
   prettier,
   {
@@ -34,13 +35,13 @@ module.exports = [
     },
   },
   {
-    files: ["**/*.test.js", "**/*.spec.js", "**/__tests__/**/*.js"],
+    files: ["**/*.test.js", "**/__tests__/**/*.js"],
     languageOptions: {
       globals: {
         describe: "readonly",
-        test: "readonly",
         it: "readonly",
         expect: "readonly",
+        test: "readonly",
         beforeEach: "readonly",
         afterEach: "readonly",
         beforeAll: "readonly",
@@ -49,8 +50,5 @@ module.exports = [
         vitest: "readonly",
       },
     },
-  },
-  {
-    ignores: ["coverage/**/*"],
   },
 ];
