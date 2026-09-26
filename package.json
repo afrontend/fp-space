@@ -1,7 +1,7 @@
 {
   "name": "fp-space",
   "version": "0.0.6",
-  "description": "library for fp-space-game",
+  "description": "functional space shooter library and terminal game",
   "homepage": "https://github.com/afrontend/fp-space",
   "author": {
     "name": "Bob Hwang",
