@@ -4,7 +4,7 @@
 
 `fp-space`는 별도의 웹 게임 없이 터미널에서 실행하는 게임이다.
 
-![Demo](https://github.com/afrontend/fp-space/releases/download/demo-assets/demo.gif)
+![demo](https://github.com/afrontend/fp-space/releases/download/demo-assets/demo.gif)
 
 ## Just run
 
